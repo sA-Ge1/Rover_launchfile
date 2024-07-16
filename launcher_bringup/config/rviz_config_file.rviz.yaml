@@ -1,0 +1,22 @@
+rviz_config:
+  displays:
+    LaserScan:
+      topic: /scan
+      color: 255; 0; 0
+      alpha: 1.0
+      decay_time: 0.1
+      style: Points
+      pose_axes: 1
+      axes_length: 1.0
+      pose_axes_length: 0.1
+      width: 0.01
+      use_lines: False
+      use_rainbow: False
+      use_fixed_frame: True
+      selectable: True
+      sorted: False
+      queue_size: 10
+      point_cloud: False
+      point_cloud_size: 1.0
+      point_cloud_color_scheme: RGB
+      point_cloud_transformer: XYZ

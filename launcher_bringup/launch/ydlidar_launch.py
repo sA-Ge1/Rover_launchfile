@@ -11,6 +11,7 @@ def generate_launch_description():
 
     # Path to the yaml configuration file
     config = '/home/sage/ros/src/launcher_bringup/config/mapper_params_online_async.yaml'
+    ydlidar_file = '/home/sage/ydlidar_ros2_ws/src/ydlidar_ros2_driver/launch/ydlidar_launch.py'
     
     # Nodes for static transforms
     N0 = Node(
@@ -19,15 +20,7 @@ def generate_launch_description():
         name='N0',
         arguments=['0', '0', '0', '0', '0', '0', 'base_footprint', 'base_link']
     )
-
-    navigation_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            '/opt/ros/humble/share/nav2_bringup/launch/navigation_launch.py'
-        ]),
-        launch_arguments={'use_sim_time': 'false'}.items()
-    )
-
-    # Used nodes
+    
     N1 = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
@@ -70,20 +63,11 @@ def generate_launch_description():
         parameters=[LaunchConfiguration('slam_params_file')]
     )
 
-    scan_mode_arg = DeclareLaunchArgument(
-        'scan_mode',
-        default_value='Standard',
-        description='Scan mode for the SLLidar'
+    ydlidar_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([ydlidar_file])
     )
 
-    sllidar_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(['/home/sage/slidder_ws/src/sllidar_ros2/launch/view_sllidar_a1_launch.py'
-        ]),
-        launch_arguments={'scan_mode': LaunchConfiguration('scan_mode')}.items()
-    )
-
-    ld.add_action(scan_mode_arg)
-    ld.add_action(sllidar_launch)
+    
 
     ld.add_action(N0)
     ld.add_action(N1)
@@ -92,7 +76,5 @@ def generate_launch_description():
     ld.add_action(teleop_node)
     ld.add_action(yaml_file_arg)
     ld.add_action(slam_toolbox_node)
-    #ld.add_action(navigation_launch)
-    
-    
+    ld.add_action(ydlidar_launch)
     return ld
